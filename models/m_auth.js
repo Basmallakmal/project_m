@@ -38,3 +38,39 @@ exports.loginuser = (req,res) => {
         }
     });
   };
+
+  exports.cekuseroldpass = (req,res,next)=>{
+     
+    let sql = 'SELECT * FROM user where id = ?'
+    connection.query(sql, [req.params.id], function (error, results) {
+        if(!results[0]){
+            return res.status(404).send({});
+        }else{
+            let password = results[0].password;
+            let oldpassword = req.body.oldpassword;
+            if( password == oldpassword){
+                req.body= {
+                    id : req.params.id,
+                    newpassword : req.body.newpassword
+                };
+                return next();
+            }else{
+                return res.status(400).send({errors : 'Password lama salah'})
+            }
+           
+        }
+    });
+}
+
+  exports.editpassword = (req,res)=>{
+    let sql = "UPDATE user SET password = ? WHERE id = "+ req.body.id +" "
+    
+    connection.query(sql,[req.body.newpassword], function (error, results) {
+    
+        if(error){
+            return res.status(400).send({errors : 'Ganti Password Gagal'})
+        }else{
+            return res.status(201).send({result : 'Berhasil'});
+        }
+    });
+  }

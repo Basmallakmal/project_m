@@ -9,5 +9,10 @@ module.exports = function (app) {
         model.registeruser
     ]);
 
+    app.post('/editpassword/:id',[
+        model.cekuseroldpass,
+        model.editpassword
+    ]);
+
       
 };

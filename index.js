@@ -2,7 +2,7 @@ var express = require('express');
 var cors = require('cors');
 var helmet = require('helmet');
 
-var app = express();
+let app = express();
 
 app.use(express.json());
 app.use(cors());
@@ -14,6 +14,8 @@ routes_user(app);
 var routes_auth = require('./routes/routes_auth');
 routes_auth(app);
 
-app.listen(3000, () => {
+app.listen(3001, () => {
     console.log('Server is running at port 3000');
   });
+
+module.exports = app;
