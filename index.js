@@ -14,7 +14,7 @@ routes_user(app);
 var routes_auth = require('./routes/routes_auth');
 routes_auth(app);
 
-app.listen(3001, () => {
+app.listen(3000, () => {
     console.log('Server is running at port 3000');
   });
 

@@ -51,42 +51,10 @@ describe('Auth User',()=>{
 
 // TEST REGISTRATION
 describe('regis user',()=>{
-    it('it should post user registration',(done)=>{
-        let datauser = {
-            nama : 'namatest',
-            email : 'test@email.com',
-            username : 'testuser',
-            password : 'testuser'
-        }
-        chai.request(app)
-        .post('/register')
-        .send(datauser)
-        .end((err,res) => {
-            res.should.have.status(201);
-            res.should.be.a('object');
-            res.body.should.have.property('result');
-            done();
-        });
-    });
-
-    it("it shouldn't post user registration",(done)=>{
-        let datauser = {
-            nama : 'namatest',
-            email : 'test@email.com',
-            username : 'testuser'
-        }
-        chai.request(app)
-        .post('/register')
-        .send(datauser)
-        .end((err,res) => {
-            res.should.have.status(400);
-            res.should.be.a('object');
-            res.body.should.have.property('errors');
-            done();
-        });
-    });
+    
 
 });
+
 
 // TEST PASSWORD
 describe('Ganti Password',()=>{
@@ -139,6 +107,77 @@ describe('Ganti Password',()=>{
 // TEST USERS
 
 describe('Users',()=>{
+
+    var iduser = 0;
+
+    it('it should post user registration',(done)=>{
+        let datauser = {
+            nama : 'namatest',
+            email : 'test@email.com',
+            username : 'testuser',
+            password : 'testuser'
+        }
+        chai.request(app)
+        .post('/register')
+        .send(datauser)
+        .end((err,res) => {
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('result');
+            res.body.should.have.property('id');
+            iduser = res.body.id;
+            done();
+        });
+    });
+
+    it("it shouldn't post user registration",(done)=>{
+        let datauser = {
+            nama : 'namatest',
+            email : 'test@email.com',
+            username : 'testuser'
+        }
+        chai.request(app)
+        .post('/register')
+        .send(datauser)
+        .end((err,res) => {
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        });
+    });
+
+    it('it should delete user',(done)=>{
+        let datauser = {
+            id : iduser
+        }
+        chai.request(app)
+        .post('/deteleuser')
+        .send(datauser)
+        .end((err,res) => {
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('result');
+            done();
+        });
+    });
+
+    it("it shouldn't delete user",(done)=>{
+        let datauser = {
+            id : iduser
+        }
+        chai.request(app)
+        .post('/deteleuser')
+        .send(datauser)
+        .end((err,res) => {
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        });
+    });
+
+
     it('it should get all user',(done)=>{
         chai.request(app)
         .get('/getuser')
@@ -169,4 +208,6 @@ describe('Users',()=>{
         })
     });
 });
+
+
 

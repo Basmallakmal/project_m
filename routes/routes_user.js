@@ -8,4 +8,8 @@ module.exports = function (app) {
     app.get('/getuser/:id', [
         model.getuserperid
     ]);
+
+    app.post('/deteleuser', [
+        model.deleteuser
+    ]);
 };

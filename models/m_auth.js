@@ -25,7 +25,7 @@ exports.loginuser = (req,res) => {
         email : req.body.email,
         username : req.body.username,
         password : req.body.password,
-        foto_profil : 'empty',
+        foto_profil : 'empty.jpg',
     }
     let sql = 'INSERT INTO user SET ? '
     
@@ -34,7 +34,7 @@ exports.loginuser = (req,res) => {
         if(error){
             return res.status(400).send({errors : 'Registrasi Gagal'})
         }else{
-            return res.status(201).send({result : 'Berhasil'});
+            return res.status(201).send({result : 'Berhasil',id : results.insertId});
         }
     });
   };
