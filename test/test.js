@@ -49,13 +49,6 @@ describe('Auth User',()=>{
     });
 });
 
-// TEST REGISTRATION
-describe('regis user',()=>{
-    
-
-});
-
-
 // TEST PASSWORD
 describe('Ganti Password',()=>{
     it("it should change user password",(done)=>{
@@ -147,6 +140,66 @@ describe('Users',()=>{
         });
     });
 
+   
+    it('it should get all user',(done)=>{
+        chai.request(app)
+        .get('/getuser')
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            done();
+        })
+    });
+
+    it('it should get one user',(done)=>{
+        chai.request(app)
+        .get('/getuser/' + '1')
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            done();
+        })
+    });
+
+    it('it should return empty user data',(done)=>{
+        chai.request(app)
+        .get('/getuser/0')
+        .end((err,res)=>{
+            res.should.have.status(404);
+            res.should.be.a('object');
+            done();
+        })
+    });
+
+    it('it should edit user data',(done)=>{
+        let datauser = {
+            username : 'userjohn',
+        }
+        chai.request(app)
+        .post('/updateuser/' + iduser)
+        .send(datauser)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('result');
+            done();
+        });
+    });
+
+
+    it("it shouldn't edit user data",(done)=>{
+        let datauser = {
+        }
+        chai.request(app)
+        .post('/updateuser/' + iduser)
+        .send(datauser)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            done();
+        });
+    });
+
+
     it('it should delete user',(done)=>{
         let datauser = {
             id : iduser
@@ -178,35 +231,6 @@ describe('Users',()=>{
     });
 
 
-    it('it should get all user',(done)=>{
-        chai.request(app)
-        .get('/getuser')
-        .end((err,res)=>{
-            res.should.have.status(201);
-            res.should.be.a('object');
-            done();
-        })
-    });
-
-    it('it should get one user',(done)=>{
-        chai.request(app)
-        .get('/getuser/' + '1')
-        .end((err,res)=>{
-            res.should.have.status(201);
-            res.should.be.a('object');
-            done();
-        })
-    });
-
-    it('it should return empty user data',(done)=>{
-        chai.request(app)
-        .get('/getuser/' + '0')
-        .end((err,res)=>{
-            res.should.have.status(404);
-            res.should.be.a('object');
-            done();
-        })
-    });
 });
 
 

@@ -31,3 +31,28 @@ exports.deleteuser = (req,res)=>{
         return res.status(400).send({errors : 'Gagal menghapus'});
     });
 }
+
+exports.cekuserid = (req,res,next)=>{
+     
+    let sql = 'SELECT * FROM user where id = ?'
+    connection.query(sql, [req.params.id], function (error, results) {
+        if(!results[0]){
+            return res.status(404).send({});
+        }else{
+            return next();
+        }
+    });
+}
+
+  exports.edituserdata = (req,res)=>{
+    let sql = "UPDATE user SET ? WHERE id = "+ req.params.id +" "
+    
+    connection.query(sql,[req.body], function (error, results) {
+    
+        if(error){
+            return res.status(400).send({errors : 'Update Gagal'})
+        }else{
+            return res.status(201).send({result : 'Update Berhasil'});
+        }
+    });
+  }

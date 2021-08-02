@@ -50,7 +50,6 @@ exports.loginuser = (req,res) => {
             let oldpassword = req.body.oldpassword;
             if( password == oldpassword){
                 req.body= {
-                    id : req.params.id,
                     newpassword : req.body.newpassword
                 };
                 return next();
@@ -63,7 +62,7 @@ exports.loginuser = (req,res) => {
 }
 
   exports.editpassword = (req,res)=>{
-    let sql = "UPDATE user SET password = ? WHERE id = "+ req.body.id +" "
+    let sql = "UPDATE user SET password = ? WHERE id = "+ req.params.id +" "
     
     connection.query(sql,[req.body.newpassword], function (error, results) {
     

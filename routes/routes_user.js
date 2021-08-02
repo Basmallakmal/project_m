@@ -12,4 +12,9 @@ module.exports = function (app) {
     app.post('/deteleuser', [
         model.deleteuser
     ]);
+
+    app.post('/updateuser/:id', [
+        model.cekuserid,
+        model.edituserdata
+    ]);
 };
