@@ -230,6 +230,181 @@ describe('Users',()=>{
         });
     });
 
+});
+
+describe("room",()=>{
+
+    it("it should create new room ",(done)=>{
+        let dataroom = {
+            nama_room : "Jual Beli alat masak",
+            id_user_maker : "1",
+            id_user_inv : "2",
+            nominal_tr : "350000",
+            status_tr : "0",
+            tipe_instan : "1",
+            diterima : "0",
+            tanggal_dikirim : "03-08-2021",
+            tanggal_tiba : "03-08-2021",
+            keterangan : "pembelian alat masak 1 set,dikirim ke surabaya",
+            dibatalkan : "0",
+        }
+        chai.request(app)
+        .post('/room')
+        .send(dataroom)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            done();
+        })
+    })
+
+    it("it shouldn't create new room ",(done)=>{
+        let dataroom = {
+            nama_room : "Jual Beli alat masak",
+            id_user_maker : "1",
+            id_user_inv : "2",
+            nominal_tr : "350000",
+            status_tr : "0",
+            tipe_instan : "1",
+            diterima : "0",
+            tanggal_dikirim : "03-08-2021",
+            tanggal_tiba : "03-08-2021",
+            keterangan : "pembelian alat masak 1 set,dikirim ke surabaya",
+            dibatalkan : "0",
+        }
+        chai.request(app)
+        .post('/room')
+        .send(dataroom)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        })
+    })
+
+    it("it should get all room",(done)=>{
+        chai.request(app)
+        .get('/room')
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            done();
+        })
+    })
+
+    it("it should get all room with user id and page",(done)=>{
+        let data = {
+            id_user : 1,
+            page : 1,
+        }
+        chai.request(app)
+        .post('/getroom')
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            done();
+        })
+    })
+
+    it("it should get room detail",(done)=>{
+        let data = {
+            id_user : 1,
+        }
+        chai.request(app)
+        .post('/getroom/' + 1)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            done();
+        })
+    })
+
+    it("it shouldn't get room detail cause no permission",(done)=>{
+        let data = {
+            id_user : 3,
+        }
+        chai.request(app)
+        .post('/getroom/' + 1)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        })
+    })
+
+    it("it should update room data",(done)=>{
+        let data = {
+            id_user : 1,
+            status_tr : "2"
+        }
+        chai.request(app)
+        .patch('/room/' + 1)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            done();
+        })
+    })
+
+    it("it shouldn't update room data",(done)=>{
+        let data = {
+            id_user : 1
+        }
+        chai.request(app)
+        .patch('/room/' + 1)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        })
+    })
+
+    it("it shouldn't update room data cause no permission",(done)=>{
+        let data = {
+            id_user : 3,
+            status_tr : "2"
+        }
+        chai.request(app)
+        .patch('/room/' + 1)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        })
+    })
+    
+    it("it should delete room",(done)=>{
+        chai.request(app)
+        .delete('/room/' + 1)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('result');
+            done();
+        })
+    })    
+    
+    it("it shouldn't delete room",(done)=>{
+        chai.request(app)
+        .delete('/room/' + 1)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        })
+    }) 
+
 
 });
 
