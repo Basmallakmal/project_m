@@ -151,7 +151,7 @@ describe('Users',()=>{
         })
     });
 
-    it('it should get one user',(done)=>{
+    it('it should get one user data',(done)=>{
         chai.request(app)
         .get('/getuser/' + '1')
         .end((err,res)=>{
@@ -234,6 +234,8 @@ describe('Users',()=>{
 
 describe("room",()=>{
 
+    var idroom = 0;
+
     it("it should create new room ",(done)=>{
         let dataroom = {
             nama_room : "Jual Beli alat masak",
@@ -254,6 +256,9 @@ describe("room",()=>{
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
+            res.body.should.have.property('result');
+            res.body.should.have.property('id');
+            idroom = res.body.id;
             done();
         })
     })
@@ -313,7 +318,7 @@ describe("room",()=>{
             id_user : 1,
         }
         chai.request(app)
-        .post('/getroom/' + 1)
+        .post('/getroom/' + idroom)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -327,7 +332,7 @@ describe("room",()=>{
             id_user : 3,
         }
         chai.request(app)
-        .post('/getroom/' + 1)
+        .post('/getroom/' + idroom)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -343,7 +348,7 @@ describe("room",()=>{
             status_tr : "2"
         }
         chai.request(app)
-        .patch('/room/' + 1)
+        .patch('/room/' + idroom)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -357,7 +362,7 @@ describe("room",()=>{
             id_user : 1
         }
         chai.request(app)
-        .patch('/room/' + 1)
+        .patch('/room/' + idroom)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -373,7 +378,7 @@ describe("room",()=>{
             status_tr : "2"
         }
         chai.request(app)
-        .patch('/room/' + 1)
+        .patch('/room/' + idroom)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -385,7 +390,7 @@ describe("room",()=>{
     
     it("it should delete room",(done)=>{
         chai.request(app)
-        .delete('/room/' + 1)
+        .delete('/room/' + idroom)
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
@@ -396,7 +401,7 @@ describe("room",()=>{
     
     it("it shouldn't delete room",(done)=>{
         chai.request(app)
-        .delete('/room/' + 1)
+        .delete('/room/' + idroom)
         .end((err,res)=>{
             res.should.have.status(400);
             res.should.be.a('object');
@@ -405,8 +410,101 @@ describe("room",()=>{
         })
     }) 
 
-
 });
 
+describe("Transaksi",()=>{
+
+    var idtrans = 0;
+
+    it("it should add new transaksi",(done)=>{
+        let data = {
+            id_room : 1,
+            id_user : 1,
+            nilai : "235000",
+            tipe : "OVO",
+            status : "0"
+        }
+        chai.request(app)
+        .post('/transaksi')
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('result');
+            res.body.should.have.property('id');
+            idtrans = res.body.id;
+            done();
+        })
+    })
+
+    it("it shouldn't add new transaksi",(done)=>{
+        let data = {
+            id_user : 1,
+            nilai : "235000",
+            tipe : "OVO",
+            status : "0"
+        }
+        chai.request(app)
+        .post('/transaksi')
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        })
+    })
+
+    it("it should get all transaksi",(done)=>{
+        chai.request(app)
+        .get('/transaksi')
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+        })
+    })
+
+    it("it should get one transaksi data",(done)=>{
+        let data={
+            id_user : 1,
+        }
+        chai.request(app)
+        .post('/transaksi/' + idtrans)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+        })
+    })
+
+    it("it shouldn't get one transaksi data cause no permission",(done)=>{
+        let data={
+            id_user : 3,
+        }
+        chai.request(app)
+        .post('/transaksi/' + idtrans)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+        })
+    })
+
+    it("it should get transaksi per user",(done)=>{
+        let data = {
+            id_user : 1,
+            page : 1
+        }
+        chai.request(app)
+        .post('/gettransaksi')
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+        })
+    })
+
+})
 
 
