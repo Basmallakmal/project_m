@@ -14,6 +14,12 @@ routes_user(app);
 var routes_auth = require('./routes/routes_auth');
 routes_auth(app);
 
+var routes_room = require('./routes/routes_room');
+routes_room(app);
+
+var routes_transaksi = require('./routes/routes_transaksi');
+routes_transaksi(app);
+
 app.listen(3000, () => {
     console.log('Server is running at port 3000');
   });

@@ -265,17 +265,7 @@ describe("room",()=>{
 
     it("it shouldn't create new room ",(done)=>{
         let dataroom = {
-            nama_room : "Jual Beli alat masak",
-            id_user_maker : "1",
-            id_user_inv : "2",
-            nominal_tr : "350000",
-            status_tr : "0",
-            tipe_instan : "1",
-            diterima : "0",
-            tanggal_dikirim : "03-08-2021",
-            tanggal_tiba : "03-08-2021",
-            keterangan : "pembelian alat masak 1 set,dikirim ke surabaya",
-            dibatalkan : "0",
+            nama : "Jual Beli alat berkebun",
         }
         chai.request(app)
         .post('/room')
@@ -301,7 +291,7 @@ describe("room",()=>{
     it("it should get all room with user id and page",(done)=>{
         let data = {
             id_user : 1,
-            page : 1,
+            page : 0,
         }
         chai.request(app)
         .post('/getroom')
@@ -345,7 +335,7 @@ describe("room",()=>{
     it("it should update room data",(done)=>{
         let data = {
             id_user : 1,
-            status_tr : "2"
+            status_tr : 2
         }
         chai.request(app)
         .patch('/room/' + idroom)
@@ -397,18 +387,7 @@ describe("room",()=>{
             res.body.should.have.property('result');
             done();
         })
-    })    
-    
-    it("it shouldn't delete room",(done)=>{
-        chai.request(app)
-        .delete('/room/' + idroom)
-        .end((err,res)=>{
-            res.should.have.status(400);
-            res.should.be.a('object');
-            res.body.should.have.property('errors');
-            done();
-        })
-    }) 
+    })   
 
 });
 
@@ -440,7 +419,7 @@ describe("Transaksi",()=>{
     it("it shouldn't add new transaksi",(done)=>{
         let data = {
             id_user : 1,
-            nilai : "235000",
+            total : "235000",
             tipe : "OVO",
             status : "0"
         }
@@ -461,6 +440,7 @@ describe("Transaksi",()=>{
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
+            done();
         })
     })
 
@@ -474,6 +454,7 @@ describe("Transaksi",()=>{
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
+            done();
         })
     })
 
@@ -488,13 +469,14 @@ describe("Transaksi",()=>{
             res.should.have.status(400);
             res.should.be.a('object');
             res.body.should.have.property('errors');
+            done();
         })
     })
 
     it("it should get transaksi per user",(done)=>{
         let data = {
             id_user : 1,
-            page : 1
+            page : 0
         }
         chai.request(app)
         .post('/gettransaksi')
@@ -502,8 +484,21 @@ describe("Transaksi",()=>{
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
+            done();
         })
     })
+
+    
+    it("it should delete transaksi",(done)=>{
+        chai.request(app)
+        .delete('/transaksi/' + idtrans)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('result');
+            done();
+        })
+    })   
 
 })
 
