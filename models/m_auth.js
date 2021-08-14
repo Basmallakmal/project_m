@@ -1,4 +1,5 @@
 var connection = require('../db/connections');
+var cryptojs = require("crypto-js");
 
 
 
@@ -9,7 +10,7 @@ exports.loginuser = (req,res) => {
             res.status(404).send({});
         }else{
             let password = results[0].password;
-            let inputpassword = req.body.password;
+            let inputpassword = cryptojs.SHA256(req.body.password);
             if(password == inputpassword){
                 return res.status(201).send(results);
             }else{
@@ -20,11 +21,12 @@ exports.loginuser = (req,res) => {
   };
 
   exports.registeruser = (req,res) => {
+    
     let data = {
         nama : req.body.nama,
         email : req.body.email,
         username : req.body.username,
-        password : req.body.password,
+        password : cryptojs.SHA256(req.body.password),
         foto_profil : 'empty.jpg',
     }
     let sql = 'INSERT INTO user SET ? '
@@ -47,7 +49,7 @@ exports.loginuser = (req,res) => {
             return res.status(404).send({});
         }else{
             let password = results[0].password;
-            let oldpassword = req.body.oldpassword;
+            let oldpassword = cryptojs.SHA256(req.body.oldpassword);
             if( password == oldpassword){
                 req.body= {
                     newpassword : req.body.newpassword
@@ -63,8 +65,10 @@ exports.loginuser = (req,res) => {
 
   exports.editpassword = (req,res)=>{
     let sql = "UPDATE user SET password = ? WHERE id = "+ req.params.id +" "
+
+    let password = cryptojs.SHA256(req.body.newpassword);
     
-    connection.query(sql,[req.body.newpassword], function (error, results) {
+    connection.query(sql,[password], function (error, results) {
     
         if(error){
             return res.status(400).send({errors : 'Ganti Password Gagal'})
