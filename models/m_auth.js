@@ -64,13 +64,14 @@ exports.loginuser = (req,res) => {
 }
 
   exports.editpassword = (req,res)=>{
-    let sql = "UPDATE user SET password = ? WHERE id = "+ req.params.id +" "
-
+    
     let password = cryptojs.SHA256(req.body.newpassword);
-    
-    connection.query(sql,[password], function (error, results) {
-    
+
+    let sql = "UPDATE user SET password = '"+ password +"' WHERE id = "+ req.params.id +" "
+
+    connection.query(sql, function (error, results) {
         if(error){
+            console.log(error);
             return res.status(400).send({errors : 'Ganti Password Gagal'})
         }else{
             return res.status(201).send({result : 'Berhasil'});
