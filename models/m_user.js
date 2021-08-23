@@ -24,7 +24,7 @@ exports.getuserperid = (req,res)=>{
 
 exports.deleteuser = (req,res)=>{
     let sql = 'DELETE FROM user where id = ?'
-    connection.query(sql, [req.body.id], function (error, results) {
+    connection.query(sql, [req.params.id], function (error, results) {
         if(results.affectedRows != 0){
             return res.status(201).send({result : 'Berhasil menghapus user'});
         }

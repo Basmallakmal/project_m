@@ -1,8 +1,10 @@
 module.exports = function (app) {
     var model = require('../models/m_auth');
+    var validation = require('../middleware/validation');
 
     app.post('/login',[
-        model.loginuser
+        model.loginuser,
+        validation.generatetoken
     ]);
 
     app.post('/register',[
