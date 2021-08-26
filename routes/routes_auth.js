@@ -16,5 +16,11 @@ module.exports = function (app) {
         model.editpassword
     ]);
 
+    app.post('/refreshtoken',[
+        validation.validate_exptoken,
+        validation.validate_refreshtoken,
+        validation.refreshtoken
+    ])
+
       
 };

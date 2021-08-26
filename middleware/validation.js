@@ -4,29 +4,116 @@ const config = require("../middleware/config");
 
 
 
-  exports.generatetoken = (req,res) => {
-      let salt = crypto.randomBytes(16).toString('base64');
-      let hash = crypto.createHmac('sha512',salt).digest('base64');
-      let b = Buffer.from(hash);
-      let refresh_token = b.toString('base64');
-      let token = jwt.sign(req.body, config.secret);
-      return res.status(201).send({token : token,refreshtoken : refresh_token});
-    };
+exports.generatetoken = (req, res) => {
+    let jwtbody = {
+        id: req.body.id,
+        permissionlevel: req.body.permissionlevel,
+    }
 
-  exports.validatetoken = (req,res,next) => {
-      if (req.headers['authorization']) {
+    let refresh_token = jwt.sign({ id: req.body.id }, config.refresh_secret, { algorithm: 'HS512' });
+    let token = jwt.sign(jwtbody, config.token_secret,{expiresIn : "1h"});
+    return res.status(201).send({
+        token: token,
+        refreshtoken: refresh_token,
+        body: req.body,
+    });
+};
+
+exports.refreshtoken = (req, res) => {
+    let jwtbody = {
+        id: req.jwt.id,
+        permissionlevel: req.jwt.permissionlevel,
+    }
+
+    let token = jwt.sign(jwtbody, config.token_secret,{expiresIn : "1h"});
+    return res.status(201).send({
+        token: token
+    });
+};
+
+exports.validatetoken = (req, res, next) => {
+    if (req.headers['authorization']) {
         try {
             let authorization = req.headers['authorization'].split(' ');
             if (authorization[0] !== 'Bearer') {
                 return res.status(401).send();
             } else {
-                req.jwt = jwt.verify(authorization[1], config.secret);
+                req.jwt = jwt.verify(authorization[1], config.token_secret);
                 return next();
             }
         } catch (err) {
-            return res.status(403).send();
+            // token can be expired or invalid. Send appropriate errors in each case:
+            if (err.name === "TokenExpiredError") {
+                return res
+                    .status(401)
+                    .json({ error: "Token expired" });
+            } else if (err.name === "JsonWebTokenError") {
+                return res
+                    .status(401)
+                    .json({ error: "Invalid token" });
+            } else {
+                //catch other unprecedented errors
+                return res.status(400).json({ err });
+            }
         }
-      } else {
-          return res.status(401).send();
-      }
-  };
+    } else {
+        return res.status(401).send();
+    }
+};
+
+exports.validate_exptoken = (req, res, next) => {
+    if (req.headers['authorization']) {
+        try {
+            let authorization = req.headers['authorization'].split(' ');
+            if (authorization[0] !== 'Bearer') {
+                return res.status(401).send();
+            } else {
+                req.jwt = jwt.verify(authorization[1], config.token_secret);
+                return res
+                    .status(401)
+                    .json({ error: "Token not expired" });
+            }
+        } catch (err) {
+            // token can be expired or invalid. Send appropriate errors in each case:
+            if (err.name === "TokenExpiredError") {
+
+                return next();
+                
+            } else if (err.name === "JsonWebTokenError") {
+                return res
+                    .status(401)
+                    .json({ error: "Invalid token" });
+            } else {
+                //catch other unprecedented errors
+                return res.status(400).json({ err });
+            }
+        }
+    } else {
+        return res.status(401).send();
+    }
+};
+
+exports.validate_refreshtoken = (req, res, next) => {
+    if (req.body.refreshtoken) {
+        try {
+            req.jwt = jwt.verify(req.body.refreshtoken, config.refresh_secret);
+            return next();
+        } catch (err) {
+            // token can be expired or invalid. Send appropriate errors in each case:
+            if (err.name === "TokenExpiredError") {
+                return res
+                    .status(401)
+                    .json({ error: "Token expired" });
+            } else if (err.name === "JsonWebTokenError") {
+                return res
+                    .status(401)
+                    .json({ error: "Invalid token" });
+            } else {
+                //catch other unprecedented errors
+                return res.status(400).json({ err });
+            }
+        }
+    } else {
+        return res.status(401).send();
+    }
+};
