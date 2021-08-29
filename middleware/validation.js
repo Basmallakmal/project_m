@@ -1,6 +1,7 @@
 var crypto = require("crypto");
 var jwt = require('jsonwebtoken');
 const config = require("../middleware/config");
+var connection = require('../db/connections');
 
 
 
@@ -19,7 +20,7 @@ exports.generatetoken = (req, res) => {
     });
 };
 
-exports.refreshtoken = (req, res) => {
+exports.refreshacctoken = (req, res) => {
     let jwtbody = {
         id: req.jwt.id,
         permissionlevel: req.jwt.permissionlevel,
@@ -117,3 +118,14 @@ exports.validate_refreshtoken = (req, res, next) => {
         return res.status(401).send();
     }
 };
+
+exports.cekbannedrefreshtoken = (req,res,next) => {
+    let sql = 'SELECT * FROM banned_refresh_token where refresh_token = ?'
+    connection.query(sql, [req.body.refreshtoken], function (error, results) {
+        if(!results[0]){
+            next();
+        }else{
+            return res.status(400).send({errors : 'Invalid refresh token'})
+        }
+    });
+}

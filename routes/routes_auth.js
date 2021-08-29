@@ -19,7 +19,12 @@ module.exports = function (app) {
     app.post('/refreshtoken',[
         validation.validate_exptoken,
         validation.validate_refreshtoken,
-        validation.refreshtoken
+        validation.cekbannedrefreshtoken,
+        validation.refreshacctoken
+    ])
+
+    app.post('/logout',[
+        model.banrefresh_token
     ])
 
       

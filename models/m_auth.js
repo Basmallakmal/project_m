@@ -87,3 +87,21 @@ exports.loginuser = (req,res,next) => {
         }
     });
   }
+
+  exports.banrefresh_token = (req,res) => {
+    
+    let data = {
+        id : req.body.id,
+        refresh_token : req.body.refresh_token
+    }
+    let sql = 'INSERT INTO banned_refresh_token SET ? '
+    
+    connection.query(sql, data, function (error, results) {
+    
+        if(error){
+            return res.status(400).send({errors : 'Logout Gagal'})
+        }else{
+            return res.status(201).send({result : 'Logout Berhasil'});
+        }
+    });
+  };
