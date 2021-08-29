@@ -16,7 +16,7 @@ exports.generatetoken = (req, res) => {
     return res.status(201).send({
         token: token,
         refreshtoken: refresh_token,
-        body: req.body,
+        isi: req.body,
     });
 };
 

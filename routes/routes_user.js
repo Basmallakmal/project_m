@@ -13,13 +13,13 @@ module.exports = function (app) {
         model.getuserperid
     ]);
 
-    app.post('/deteleuser/:id', [
+    app.delete('/deteleuser/:id', [
         validation.validatetoken,
         model.cekuserid,
         model.deleteuser
     ]);
 
-    app.post('/updateuser/:id', [
+    app.patch('/updateuser/:id', [
         validation.validatetoken,
         model.cekuserid,
         model.edituserdata

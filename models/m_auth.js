@@ -45,7 +45,7 @@ exports.loginuser = (req,res,next) => {
         if(error){
             return res.status(400).send({errors : 'Registrasi Gagal'})
         }else{
-            return res.status(201).send({result : 'Berhasil',id : results.insertId});
+            return res.status(201).send({result : 'Berhasil'});
         }
     });
   };

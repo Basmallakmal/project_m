@@ -11,7 +11,8 @@ module.exports = function (app) {
         model.registeruser
     ]);
 
-    app.post('/editpassword/:id',[
+    app.patch('/editpassword/:id',[
+        validation.validatetoken,
         model.cekuseroldpass,
         model.editpassword
     ]);
