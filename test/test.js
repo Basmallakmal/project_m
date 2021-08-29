@@ -6,7 +6,7 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-
+var token,refresh_token;
 // TEST USERS
 
 describe('Users',()=>{
@@ -27,8 +27,6 @@ describe('Users',()=>{
             res.should.have.status(201);
             res.should.be.a('object');
             res.body.should.have.property('result');
-            res.body.should.have.property('id');
-            iduser = res.body.id;
             done();
         });
     });
@@ -60,6 +58,9 @@ describe('Users',()=>{
         .end((err,res)=> {
             res.should.have.status(201);
             res.should.be.a('object');
+            iduser = res.body.isi.id;
+            token = res.body.token;
+            refresh_token = res.body.refreshtoken;
             done();
         });
     });
@@ -68,8 +69,8 @@ describe('Users',()=>{
         chai.request(app)
         .post('/login')
         .send({
-            username : 'user',
-            password : 'pass'
+            username : 'a',
+            password : 'a'
         })
         .end((err,res)=> {
             res.should.have.status(404);
@@ -98,7 +99,8 @@ describe('Users',()=>{
             newpassword : 'user'
         }
         chai.request(app)
-        .post('/editpassword/' + iduser)
+        .patch('/editpassword/' + iduser)
+        .set('Authorization', 'Bearer ' + token)
         .send(datauser)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -113,7 +115,8 @@ describe('Users',()=>{
             newpassword : 'tesuser'
         }
         chai.request(app)
-        .post('/editpassword/' + iduser)
+        .patch('/editpassword/' + iduser)
+        .set('Authorization', 'Bearer ' + token)
         .send(datauser)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -130,6 +133,7 @@ describe('Users',()=>{
         }
         chai.request(app)
         .post('/editpassword/0')
+        .set('Authorization', 'Bearer ' + token)
         .send(datauser)
         .end((err,res)=>{
             res.should.have.status(404);
@@ -140,6 +144,7 @@ describe('Users',()=>{
     it('it should get all user',(done)=>{
         chai.request(app)
         .get('/getuser')
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
@@ -150,6 +155,7 @@ describe('Users',()=>{
     it('it should get one user data',(done)=>{
         chai.request(app)
         .get('/getuser/' + iduser)
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
@@ -160,6 +166,7 @@ describe('Users',()=>{
     it('it should return empty user data',(done)=>{
         chai.request(app)
         .get('/getuser/0')
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
             res.should.have.status(404);
             res.should.be.a('object');
@@ -172,7 +179,8 @@ describe('Users',()=>{
             username : 'userjohn',
         }
         chai.request(app)
-        .post('/updateuser/' + iduser)
+        .patch('/updateuser/' + iduser)
+        .set('Authorization', 'Bearer ' + token)
         .send(datauser)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -187,7 +195,8 @@ describe('Users',()=>{
         let datauser = {
         }
         chai.request(app)
-        .post('/updateuser/' + iduser)
+        .patch('/updateuser/' + iduser)
+        .set('Authorization', 'Bearer ' + token)
         .send(datauser)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -197,12 +206,9 @@ describe('Users',()=>{
 
 
     it('it should delete user',(done)=>{
-        let datauser = {
-            id : iduser
-        }
         chai.request(app)
-        .post('/deteleuser')
-        .send(datauser)
+        .delete('/deteleuser/' + iduser)
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res) => {
             res.should.have.status(201);
             res.should.be.a('object');
@@ -212,16 +218,11 @@ describe('Users',()=>{
     });
 
     it("it shouldn't delete user",(done)=>{
-        let datauser = {
-            id : iduser
-        }
         chai.request(app)
-        .post('/deteleuser')
-        .send(datauser)
+        .delete('/deteleuser/' + iduser)
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res) => {
-            res.should.have.status(400);
-            res.should.be.a('object');
-            res.body.should.have.property('errors');
+            res.should.have.status(404);
             done();
         });
     });
@@ -250,6 +251,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .post('/room')
+        .set('Authorization', 'Bearer ' + token)
         .send(dataroom)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -267,6 +269,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .post('/room')
+        .set('Authorization', 'Bearer ' + token)
         .send(dataroom)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -279,6 +282,7 @@ describe("room",()=>{
     it("it should get all room",(done)=>{
         chai.request(app)
         .get('/room')
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
@@ -293,6 +297,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .post('/getroom')
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -307,6 +312,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .post('/getroom/' + idroom)
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -321,6 +327,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .post('/getroom/' + idroom)
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -337,6 +344,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .patch('/room/' + idroom)
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -351,6 +359,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .patch('/room/' + idroom)
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -367,6 +376,7 @@ describe("room",()=>{
         }
         chai.request(app)
         .patch('/room/' + idroom)
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -379,6 +389,7 @@ describe("room",()=>{
     it("it should delete room",(done)=>{
         chai.request(app)
         .delete('/room/' + idroom)
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
@@ -405,6 +416,7 @@ describe("Transaksi",()=>{
         }
         chai.request(app)
         .post('/transaksi')
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -425,6 +437,7 @@ describe("Transaksi",()=>{
         }
         chai.request(app)
         .post('/transaksi')
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -437,6 +450,7 @@ describe("Transaksi",()=>{
     it("it should get all transaksi",(done)=>{
         chai.request(app)
         .get('/transaksi')
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');
@@ -450,6 +464,7 @@ describe("Transaksi",()=>{
         }
         chai.request(app)
         .post('/transaksi/' + idtrans)
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -464,6 +479,7 @@ describe("Transaksi",()=>{
         }
         chai.request(app)
         .post('/transaksi/' + idtrans)
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(400);
@@ -480,6 +496,7 @@ describe("Transaksi",()=>{
         }
         chai.request(app)
         .post('/gettransaksi')
+        .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
             res.should.have.status(201);
@@ -492,6 +509,7 @@ describe("Transaksi",()=>{
     it("it should delete transaksi",(done)=>{
         chai.request(app)
         .delete('/transaksi/' + idtrans)
+        .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
             res.should.have.status(201);
             res.should.be.a('object');

@@ -1,6 +1,7 @@
 var express = require('express');
 var cors = require('cors');
 var helmet = require('helmet');
+require('dotenv').config()
 
 let app = express();
 
@@ -20,8 +21,8 @@ routes_room(app);
 var routes_transaksi = require('./routes/routes_transaksi');
 routes_transaksi(app);
 
-app.listen(3000, () => {
-    console.log('Server is running at port 3000');
+app.listen(process.env.PORT, () => {
+    console.log('Server is running at port ' + process.env.PORT);
   });
 
 module.exports = app;

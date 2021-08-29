@@ -1,9 +1,10 @@
 var connection = require('../db/connections');
 var cryptojs = require("crypto-js");
+const config = require("../middleware/config");
 
 
 
-exports.loginuser = (req,res) => {
+exports.loginuser = (req,res,next) => {
     let sql = 'SELECT * FROM user where username = ?'
     connection.query(sql, [req.body.username], function (error, results) {
         if(!results[0]){
@@ -12,7 +13,15 @@ exports.loginuser = (req,res) => {
             let password = results[0].password;
             let inputpassword = cryptojs.SHA256(req.body.password);
             if(password == inputpassword){
-                return res.status(201).send(results);
+                req.body = {
+                    id : results[0].id,
+                    nama : results[0].nama,
+                    email : results[0].email,
+                    username : results[0].username,
+                    foto_profil : results[0].foto_profil,
+                    permissionlevel : config.role[0],
+                }
+                next();
             }else{
                 return res.status(400).send({errors : 'Invalid username or password'})
             }
@@ -36,7 +45,7 @@ exports.loginuser = (req,res) => {
         if(error){
             return res.status(400).send({errors : 'Registrasi Gagal'})
         }else{
-            return res.status(201).send({result : 'Berhasil',id : results.insertId});
+            return res.status(201).send({result : 'Berhasil'});
         }
     });
   };
@@ -78,3 +87,21 @@ exports.loginuser = (req,res) => {
         }
     });
   }
+
+  exports.banrefresh_token = (req,res) => {
+    
+    let data = {
+        id : req.body.id,
+        refresh_token : req.body.refresh_token
+    }
+    let sql = 'INSERT INTO banned_refresh_token SET ? '
+    
+    connection.query(sql, data, function (error, results) {
+    
+        if(error){
+            return res.status(400).send({errors : 'Logout Gagal'})
+        }else{
+            return res.status(201).send({result : 'Logout Berhasil'});
+        }
+    });
+  };
