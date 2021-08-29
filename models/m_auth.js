@@ -74,6 +74,7 @@ exports.loginuser = (req,res,next) => {
 
   exports.editpassword = (req,res)=>{
     
+      
     let password = cryptojs.SHA256(req.body.newpassword);
 
     let sql = "UPDATE user SET password = '"+ password +"' WHERE id = "+ req.params.id +" "
