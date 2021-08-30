@@ -25,6 +25,8 @@ module.exports = function (app) {
     ])
 
     app.post('/logout',[
+        validation.validate_refreshtoken,
+        validation.cekbannedrefreshtoken,
         model.banrefresh_token
     ])
 

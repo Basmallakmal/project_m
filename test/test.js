@@ -7,6 +7,7 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 var token,refresh_token;
+var exptoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQxLCJpYXQiOjE2Mjk5NjU2NjgsImV4cCI6MTYyOTk2OTI2OH0.OdeCcRZbvT7HCzww5nccOpbhLIKVccK44US68ZsN8yE";
 // TEST USERS
 
 describe('Users',()=>{
@@ -203,6 +204,69 @@ describe('Users',()=>{
             done();
         });
     });
+
+    it("it should refresh token",(done)=>{
+        let data = {
+            refreshtoken : refresh_token,
+        }
+        chai.request(app)
+        .post('/refreshtoken')
+        .set('Authorization', 'Bearer ' + exptoken)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('token');
+            done();
+        });
+    })
+
+    it("it shouldn't refresh token cause token not exp",(done)=>{
+        let data = {
+            refreshtoken : refresh_token,
+        }
+        chai.request(app)
+        .post('/refreshtoken')
+        .set('Authorization', 'Bearer ' + token)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(401);
+            res.should.be.a('object');
+            res.body.should.have.property('error');
+            done();
+        });
+    })
+
+    it("it should logout and ban refresh_token",(done)=>{
+        let data = {
+            refreshtoken : refresh_token,
+        }
+        chai.request(app)
+        .post('/logout')
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(201);
+            res.should.be.a('object');
+            res.body.should.have.property('result');
+            done();
+        });
+    })
+
+    it("it shouldn't refresh token cause refresh_token not valid ",(done)=>{
+        let data = {
+            refreshtoken : refresh_token,
+        }
+        chai.request(app)
+        .post('/refreshtoken')
+        .set('Authorization', 'Bearer ' + exptoken)
+        .send(data)
+        .end((err,res)=>{
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        });
+    })
 
 
     it('it should delete user',(done)=>{

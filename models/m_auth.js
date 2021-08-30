@@ -92,9 +92,10 @@ exports.loginuser = (req,res,next) => {
   exports.banrefresh_token = (req,res) => {
     
     let data = {
-        id : req.body.id,
-        refresh_token : req.body.refresh_token
+        id_user : req.jwt.id,
+        refresh_token : req.body.refreshtoken
     }
+
     let sql = 'INSERT INTO banned_refresh_token SET ? '
     
     connection.query(sql, data, function (error, results) {
