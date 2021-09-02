@@ -32,6 +32,24 @@ describe('Users',()=>{
         });
     });
 
+    it("it shouldn't post user cause same usename",(done)=>{
+        let datauser = {
+            nama : 'namatest',
+            email : 'test@email.com',
+            username : 'testuser',
+            password : 'testuser'
+        }
+        chai.request(app)
+        .post('/register')
+        .send(datauser)
+        .end((err,res) => {
+            res.should.have.status(400);
+            res.should.be.a('object');
+            res.body.should.have.property('errors');
+            done();
+        });
+    });
+
     it("it shouldn't post user registration",(done)=>{
         let datauser = {
             nama : 'namatest',
