@@ -50,6 +50,20 @@ exports.loginuser = (req,res,next) => {
     });
   };
 
+  exports.cekduplicateusername = (req,res,next)=>{
+     
+    let sql = 'SELECT * FROM user where username = ?'
+    connection.query(sql, [req.body.username], function (error, results) {
+        if(!results[0]){
+            return next();
+        }else{
+            
+            return res.status(400).send({errors : "Username sudah terdaftar"});
+           
+        }
+    });
+}
+
   exports.cekuseroldpass = (req,res,next)=>{
      
     let sql = 'SELECT * FROM user where id = ?'

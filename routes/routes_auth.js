@@ -8,6 +8,7 @@ module.exports = function (app) {
     ]);
 
     app.post('/register',[
+        model.cekduplicateusername,
         model.registeruser
     ]);
 
