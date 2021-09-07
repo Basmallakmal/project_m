@@ -25,7 +25,7 @@ describe('Users',()=>{
         .post('/register')
         .send(datauser)
         .end((err,res) => {
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.should.be.a('object');
             res.body.should.have.property('result');
             done();
@@ -75,7 +75,7 @@ describe('Users',()=>{
             password : 'testuser'
         })
         .end((err,res)=> {
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.should.be.a('object');
             iduser = res.body.isi.id;
             token = res.body.token;
@@ -122,7 +122,7 @@ describe('Users',()=>{
         .set('Authorization', 'Bearer ' + token)
         .send(datauser)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(202);
             res.should.be.a('object');
             done();
         });
@@ -232,7 +232,7 @@ describe('Users',()=>{
         .set('Authorization', 'Bearer ' + exptoken)
         .send(data)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.should.be.a('object');
             res.body.should.have.property('token');
             done();
@@ -263,7 +263,7 @@ describe('Users',()=>{
         .post('/logout')
         .send(data)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.should.be.a('object');
             res.body.should.have.property('result');
             done();
@@ -292,7 +292,7 @@ describe('Users',()=>{
         .delete('/deteleuser/' + iduser)
         .set('Authorization', 'Bearer ' + token)
         .end((err,res) => {
-            res.should.have.status(201);
+            res.should.have.status(203);
             res.should.be.a('object');
             res.body.should.have.property('result');
             done();
@@ -336,7 +336,7 @@ describe("room",()=>{
         .set('Authorization', 'Bearer ' + token)
         .send(dataroom)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.should.be.a('object');
             res.body.should.have.property('result');
             res.body.should.have.property('id');
@@ -378,7 +378,7 @@ describe("room",()=>{
             page : 0,
         }
         chai.request(app)
-        .post('/getroom')
+        .get('/getroom')
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
@@ -393,7 +393,7 @@ describe("room",()=>{
             id_user : 1,
         }
         chai.request(app)
-        .post('/getroom/' + idroom)
+        .get('/getroom/' + idroom)
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
@@ -408,7 +408,7 @@ describe("room",()=>{
             id_user : 3,
         }
         chai.request(app)
-        .post('/getroom/' + idroom)
+        .get('/getroom/' + idroom)
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
@@ -429,7 +429,7 @@ describe("room",()=>{
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(202);
             res.should.be.a('object');
             done();
         })
@@ -473,7 +473,7 @@ describe("room",()=>{
         .delete('/room/' + idroom)
         .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(203);
             res.should.be.a('object');
             res.body.should.have.property('result');
             done();
@@ -501,7 +501,7 @@ describe("Transaksi",()=>{
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.should.be.a('object');
             res.body.should.have.property('result');
             res.body.should.have.property('id');
@@ -545,7 +545,7 @@ describe("Transaksi",()=>{
             id_user : 1,
         }
         chai.request(app)
-        .post('/transaksi/' + idtrans)
+        .get('/transaksi/' + idtrans)
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
@@ -560,11 +560,11 @@ describe("Transaksi",()=>{
             id_user : 3,
         }
         chai.request(app)
-        .post('/transaksi/' + idtrans)
+        .get('/transaksi/' + idtrans)
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
-            res.should.have.status(400);
+            res.should.have.status(401);
             res.should.be.a('object');
             res.body.should.have.property('errors');
             done();
@@ -577,7 +577,7 @@ describe("Transaksi",()=>{
             page : 0
         }
         chai.request(app)
-        .post('/gettransaksi')
+        .get('/gettransaksi')
         .set('Authorization', 'Bearer ' + token)
         .send(data)
         .end((err,res)=>{
@@ -593,7 +593,7 @@ describe("Transaksi",()=>{
         .delete('/transaksi/' + idtrans)
         .set('Authorization', 'Bearer ' + token)
         .end((err,res)=>{
-            res.should.have.status(201);
+            res.should.have.status(203);
             res.should.be.a('object');
             res.body.should.have.property('result');
             done();
