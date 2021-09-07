@@ -13,7 +13,7 @@ module.exports = function(app){
         model.getalltransaksi
     ]);
 
-    app.post('/transaksi/:id',[
+    app.get('/transaksi/:id',[
         validation.validatetoken,
         model.cektruser,
         model.gettransaksidetail
@@ -24,7 +24,7 @@ module.exports = function(app){
         model.deletetransaksi
     ])
 
-    app.post('/gettransaksi',[
+    app.get('/gettransaksi',[
         validation.validatetoken,
         model.getransaksiperuser
     ]);

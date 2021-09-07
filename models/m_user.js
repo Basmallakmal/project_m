@@ -4,7 +4,7 @@ exports.getuser = (req,res) => {
     let sql = 'SELECT * FROM user'
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             return res.status(201).send(results);
         }
@@ -26,7 +26,7 @@ exports.deleteuser = (req,res)=>{
     let sql = 'DELETE FROM user where id = ?'
     connection.query(sql, [req.params.id], function (error, results) {
         if(results.affectedRows != 0){
-            return res.status(201).send({result : 'Berhasil menghapus user'});
+            return res.status(203).send({result : 'Berhasil menghapus user'});
         }
         return res.status(400).send({errors : 'Gagal menghapus'});
     });

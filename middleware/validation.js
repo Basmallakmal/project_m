@@ -13,7 +13,7 @@ exports.generatetoken = (req, res) => {
 
     let refresh_token = jwt.sign({ id: req.body.id }, config.refresh_secret, { algorithm: 'HS512' });
     let token = jwt.sign(jwtbody, config.token_secret,{expiresIn : "1h"});
-    return res.status(201).send({
+    return res.status(200).send({
         token: token,
         refreshtoken: refresh_token,
         isi: req.body,
@@ -27,7 +27,7 @@ exports.refreshacctoken = (req, res) => {
     }
 
     let token = jwt.sign(jwtbody, config.token_secret,{expiresIn : "1h"});
-    return res.status(201).send({
+    return res.status(200).send({
         token: token
     });
 };
@@ -46,15 +46,15 @@ exports.validatetoken = (req, res, next) => {
             // token can be expired or invalid. Send appropriate errors in each case:
             if (err.name === "TokenExpiredError") {
                 return res
-                    .status(401)
+                    .status(403)
                     .json({ error: "Token expired" });
             } else if (err.name === "JsonWebTokenError") {
                 return res
-                    .status(401)
+                    .status(403)
                     .json({ error: "Invalid token" });
             } else {
                 //catch other unprecedented errors
-                return res.status(400).json({ err });
+                return res.status(403).json({ err });
             }
         }
     } else {
@@ -82,11 +82,11 @@ exports.validate_exptoken = (req, res, next) => {
                 
             } else if (err.name === "JsonWebTokenError") {
                 return res
-                    .status(401)
+                    .status(403)
                     .json({ error: "Invalid token" });
             } else {
                 //catch other unprecedented errors
-                return res.status(400).json({ err });
+                return res.status(403).json({ err });
             }
         }
     } else {
@@ -103,15 +103,15 @@ exports.validate_refreshtoken = (req, res, next) => {
             // token can be expired or invalid. Send appropriate errors in each case:
             if (err.name === "TokenExpiredError") {
                 return res
-                    .status(401)
+                    .status(403)
                     .json({ error: "Token expired" });
             } else if (err.name === "JsonWebTokenError") {
                 return res
-                    .status(401)
+                    .status(403)
                     .json({ error: "Invalid token" });
             } else {
                 //catch other unprecedented errors
-                return res.status(400).json({ err });
+                return res.status(403).json({ err });
             }
         }
     } else {

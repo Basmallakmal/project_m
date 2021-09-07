@@ -22,7 +22,7 @@ exports.createroom = (req,res)=>{
         if(error){
             return res.status(400).send({errors : 'Room Gagal Dibuat'})
         }else{
-            return res.status(201).send({result : 'Berhasil', id : results.insertId});
+            return res.status(200).send({result : 'Berhasil', id : results.insertId});
         }
     });
 
@@ -32,7 +32,7 @@ exports.getallroom = (req,res)=>{
     let sql = "SELECT * FROM room"
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             return res.status(201).send(results);
         }
@@ -45,7 +45,7 @@ exports.getroomperuser = (req,res)=>{
     let sql = "SELECT * FROM room WHERE id_user_inv = "+req.body.id_user+" OR id_user_maker = "+req.body.id_user+" LIMIT "+offset+" , "+limit+" "
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             return res.status(201).send(results);
         }
@@ -56,7 +56,7 @@ exports.cekmember = (req,res,next)=>{
     let sql = "SELECT * FROM room WHERE id = "+req.params.id+" "
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             if(results[0].id_user_inv == req.body.id_user || results[0].id_user_maker == req.body.id_user){
                 return next();
@@ -71,7 +71,7 @@ exports.getroomdetail = (req,res)=>{
     let sql = "SELECT * FROM room WHERE id = "+req.params.id+" "
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             return res.status(201).send(results);
         }
@@ -87,7 +87,7 @@ exports.updateroom = (req,res)=>{
         if(error){
             return res.status(400).send({errors : 'Update Gagal'})
         }else{
-            return res.status(201).send({result : 'Update Berhasil'});
+            return res.status(202).send({result : 'Update Berhasil'});
         }
     });
 }
@@ -97,7 +97,7 @@ exports.deleteroom = (req,res)=>{
     let sql = 'DELETE FROM room where id = ?'
     connection.query(sql, [req.params.id], function (error, results) {
         if(results.affectedRows != 0){
-            return res.status(201).send({result : 'Berhasil menghapus room'});
+            return res.status(203).send({result : 'Berhasil menghapus room'});
         }
         return res.status(400).send({errors : 'Gagal menghapus'});
     });

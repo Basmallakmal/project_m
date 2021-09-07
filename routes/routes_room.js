@@ -23,12 +23,12 @@ module.exports = function(app){
         model.deleteroom
     ])
 
-    app.post('/getroom',[
+    app.get('/getroom',[
         validation.validatetoken,
         model.getroomperuser
     ])
 
-    app.post('/getroom/:id',[
+    app.get('/getroom/:id',[
         validation.validatetoken,
         model.cekmember,
         model.getroomdetail

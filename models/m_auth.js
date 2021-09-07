@@ -45,7 +45,7 @@ exports.loginuser = (req,res,next) => {
         if(error){
             return res.status(400).send({errors : 'Registrasi Gagal'})
         }else{
-            return res.status(201).send({result : 'Berhasil'});
+            return res.status(200).send({result : 'Berhasil'});
         }
     });
   };
@@ -95,10 +95,9 @@ exports.loginuser = (req,res,next) => {
 
     connection.query(sql, function (error, results) {
         if(error){
-            console.log(error);
             return res.status(400).send({errors : 'Ganti Password Gagal'})
         }else{
-            return res.status(201).send({result : 'Berhasil'});
+            return res.status(202).send({result : 'Berhasil'});
         }
     });
   }
@@ -117,7 +116,7 @@ exports.loginuser = (req,res,next) => {
         if(error){
             return res.status(400).send({errors : 'Logout Gagal'})
         }else{
-            return res.status(201).send({result : 'Logout Berhasil'});
+            return res.status(200).send({result : 'Logout Berhasil'});
         }
     });
   };

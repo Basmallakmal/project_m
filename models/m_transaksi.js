@@ -18,7 +18,7 @@ exports.addtransaksi = (req,res)=>{
         if(error){
             return res.status(400).send({errors : 'Transaksi Gagal'})
         }else{
-            return res.status(201).send({result : 'Berhasil', id : results.insertId});
+            return res.status(200).send({result : 'Berhasil', id : results.insertId});
         }
     });
 }
@@ -44,7 +44,7 @@ exports.getalltransaksi = (req,res)=>{
     let sql = "SELECT * FROM transaksi"
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             return res.status(201).send(results);
         }
@@ -55,12 +55,12 @@ exports.cektruser = (req,res,next)=>{
     let sql = "SELECT * FROM transaksi WHERE id = "+req.params.id+" "
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             if(results[0].id_user == req.body.id_user){
                 return next();
             }else{
-                return res.status(400).send({errors : 'No Permission'})
+                return res.status(401).send({errors : 'No Permission'})
             }
         }
     });
@@ -70,7 +70,7 @@ exports.gettransaksidetail = (req,res)=>{
     let sql = "SELECT * FROM transaksi WHERE id = "+req.params.id+" "
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             return res.status(201).send(results);
         }
@@ -83,7 +83,7 @@ exports.getransaksiperuser = (req,res)=>{
     let sql = "SELECT * FROM transaksi WHERE id_user = "+req.body.id_user+" LIMIT "+offset+" , "+limit+" "
     connection.query(sql, function (error, results) {
         if(error){
-            return res.status(404).send()
+            return res.status(400).send()
         }else{
             return res.status(201).send(results);
         }
@@ -94,7 +94,7 @@ exports.deletetransaksi = (req,res)=>{
     let sql = 'DELETE FROM transaksi where id = ?'
     connection.query(sql, [req.params.id], function (error, results) {
         if(results.affectedRows != 0){
-            return res.status(201).send({result : 'Berhasil menghapus transaksi'});
+            return res.status(203).send({result : 'Berhasil menghapus transaksi'});
         }
         return res.status(400).send({errors : 'Gagal menghapus'});
     });
